@@ -37,17 +37,23 @@ BuildRequires:  ghc-async-devel
 BuildRequires:  ghc-base-devel
 BuildRequires:  ghc-base16-bytestring-devel
 BuildRequires:  ghc-binary-devel
+%if %{defined fedora}
 BuildRequires:  ghc-brick-devel
+%endif
 BuildRequires:  ghc-bytestring-devel
 #BuildRequires:  ghc-bz2-devel
+%if %{defined fedora}
 BuildRequires:  ghc-cabal-plan-devel
+%endif
 BuildRequires:  ghc-case-insensitive-devel
 #BuildRequires:  ghc-casing-devel
 BuildRequires:  ghc-containers-devel
 BuildRequires:  ghc-cryptohash-sha256-devel
 BuildRequires:  ghc-deepseq-devel
 BuildRequires:  ghc-directory-devel
+%if %{defined fedora}
 BuildRequires:  ghc-disk-free-space-devel
+%endif
 BuildRequires:  ghc-exceptions-devel
 BuildRequires:  ghc-filepath-devel
 #BuildRequires:  ghc-haskus-utils-types-devel
@@ -66,9 +72,13 @@ BuildRequires:  ghc-pretty-terminal-devel
 BuildRequires:  ghc-process-devel
 BuildRequires:  ghc-regex-posix-devel
 BuildRequires:  ghc-resourcet-devel
+%if %{defined fedora}
 BuildRequires:  ghc-retry-devel
+%endif
 BuildRequires:  ghc-safe-devel
+%if %{defined fedora}
 BuildRequires:  ghc-safe-exceptions-devel
+%endif
 BuildRequires:  ghc-split-devel
 #BuildRequires:  ghc-streamly-devel
 #BuildRequires:  ghc-strict-base-devel
@@ -84,12 +94,16 @@ BuildRequires:  ghc-unix-devel
 #BuildRequires:  ghc-unix-bytestring-devel
 BuildRequires:  ghc-unliftio-core-devel
 BuildRequires:  ghc-unordered-containers-devel
+%if %{defined fedora}
 BuildRequires:  ghc-uri-bytestring-devel
+%endif
 BuildRequires:  ghc-utf8-string-devel
 BuildRequires:  ghc-vector-devel
 #BuildRequires:  ghc-versions-devel
+%if %{defined fedora}
 BuildRequires:  ghc-vty-devel
 BuildRequires:  ghc-word8-devel
+%endif
 #BuildRequires:  ghc-yaml-streamly-devel
 BuildRequires:  ghc-zlib-devel
 BuildRequires:  cabal-install > 1.18
@@ -100,7 +114,9 @@ BuildRequires:  ghc-attoparsec-devel
 BuildRequires:  ghc-base64-bytestring-devel
 BuildRequires:  ghc-blaze-builder-devel
 #BuildRequires:  ghc-brotli-streams-devel
+%if %{defined fedora}
 BuildRequires:  ghc-cryptohash-sha1-devel
+%endif
 BuildRequires:  ghc-network-devel
 BuildRequires:  ghc-network-uri-devel
 BuildRequires:  ghc-openssl-streams-devel
@@ -112,7 +128,9 @@ BuildRequires:  ghc-dlist-devel
 BuildRequires:  ghc-unix-compat-devel
 # for missing dep 'optics':
 BuildRequires:  ghc-array-devel
+%if %{defined fedora}
 BuildRequires:  ghc-optics-core-devel
+%endif
 #BuildRequires:  ghc-optics-extra-devel
 #BuildRequires:  ghc-optics-th-devel
 # for missing dep 'streamly':
@@ -136,6 +154,9 @@ BuildRequires:  ghc-scientific-devel
 BuildRequires: libarchive-devel
 # for brotli
 BuildRequires: brotli-devel
+%if %{defined el9}
+BuildRequires:  ghc-terminfo-devel
+%endif
 
 %description
 A rewrite of the shell script ghcup, for providing a more stable user
