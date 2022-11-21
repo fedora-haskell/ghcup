@@ -14,7 +14,7 @@
 
 Name:           %{pkg_name}
 Version:        0.1.18.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Ghc toolchain installer
 
 License:        LGPLv3+
@@ -24,17 +24,20 @@ Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
 # missing from tarball
 Source1:        dirutils.h
-Patch0:         ghcup-0.1.18.0-cabal-dirutils.h.patch
+Patch0:         ghcup-default-flags.patch
+Patch1:         ghcup-0.1.18.0-cabal-dirutils.h.patch
 
 # Begin cabal-rpm deps:
 BuildRequires:  ghc-rpm-macros
 BuildRequires:  ghc-Cabal-devel
+BuildRequires:  ghc-HsOpenSSL-devel
 BuildRequires:  ghc-aeson-devel
 BuildRequires:  ghc-aeson-pretty-devel
 BuildRequires:  ghc-async-devel
 BuildRequires:  ghc-base-devel
 BuildRequires:  ghc-base16-bytestring-devel
 BuildRequires:  ghc-binary-devel
+BuildRequires:  ghc-brick-devel
 BuildRequires:  ghc-bytestring-devel
 #BuildRequires:  ghc-bz2-devel
 BuildRequires:  ghc-cabal-plan-devel
@@ -49,6 +52,8 @@ BuildRequires:  ghc-exceptions-devel
 BuildRequires:  ghc-filepath-devel
 #BuildRequires:  ghc-haskus-utils-types-devel
 #BuildRequires:  ghc-haskus-utils-variant-devel
+#BuildRequires:  ghc-http-io-streams-devel
+BuildRequires:  ghc-io-streams-devel
 #BuildRequires:  ghc-libarchive-devel
 #BuildRequires:  ghc-lzma-static-devel
 BuildRequires:  ghc-megaparsec-devel
@@ -70,6 +75,7 @@ BuildRequires:  ghc-split-devel
 BuildRequires:  ghc-tagsoup-devel
 BuildRequires:  ghc-template-haskell-devel
 BuildRequires:  ghc-temporary-devel
+#BuildRequires:  ghc-terminal-progress-bar-devel
 BuildRequires:  ghc-terminal-size-devel
 BuildRequires:  ghc-text-devel
 BuildRequires:  ghc-time-devel
@@ -82,12 +88,23 @@ BuildRequires:  ghc-uri-bytestring-devel
 BuildRequires:  ghc-utf8-string-devel
 BuildRequires:  ghc-vector-devel
 #BuildRequires:  ghc-versions-devel
+BuildRequires:  ghc-vty-devel
 BuildRequires:  ghc-word8-devel
 #BuildRequires:  ghc-yaml-streamly-devel
 BuildRequires:  ghc-zlib-devel
 BuildRequires:  cabal-install > 1.18
 # for missing dep 'haskus-utils-variant':
 #BuildRequires:  ghc-haskus-utils-data-devel
+# for missing dep 'http-io-streams':
+BuildRequires:  ghc-attoparsec-devel
+BuildRequires:  ghc-base64-bytestring-devel
+BuildRequires:  ghc-blaze-builder-devel
+#BuildRequires:  ghc-brotli-streams-devel
+BuildRequires:  ghc-cryptohash-sha1-devel
+BuildRequires:  ghc-network-devel
+BuildRequires:  ghc-network-uri-devel
+BuildRequires:  ghc-openssl-streams-devel
+#BuildRequires:  ghc-xor-devel
 # for missing dep 'libarchive':
 #BuildRequires:  ghc-chs-cabal-devel
 #BuildRequires:  ghc-composition-prelude-devel
@@ -117,6 +134,8 @@ BuildRequires:  ghc-scientific-devel
 # End cabal-rpm deps
 # for libarchive
 BuildRequires: libarchive-devel
+# for brotli
+BuildRequires: brotli-devel
 
 %description
 A rewrite of the shell script ghcup, for providing a more stable user
@@ -129,6 +148,8 @@ experience and exposing an API.
 # End cabal-rpm setup
 cp %SOURCE1 cbits/
 %patch0 -p1 -b .orig
+%patch1 -p1 -b .orig
+
 
 %build
 # Begin cabal-rpm build:
@@ -169,5 +190,8 @@ mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
 
 
 %changelog
+* Mon Nov 21 2022 Jens Petersen <petersen@redhat.com> - 0.1.18.0-2
+- enable tui and internal-downloader
+
 * Mon Nov 21 2022 Jens Petersen <petersen@redhat.com> - 0.1.18.0-1
 - initial package
