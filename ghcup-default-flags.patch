@@ -1,6 +1,6 @@
 --- ghcup/ghcup.cabal~	2022-11-21 21:20:51.758167630 +0800
 +++ ghcup/ghcup.cabal	2022-11-21 21:22:06.730541930 +0800
-@@ -33,14 +33,14 @@
+@@ -33,7 +33,7 @@
    description:
      Build the brick powered tui (ghcup tui). This is disabled on windows.
  
@@ -9,11 +9,3 @@
    manual:      True
  
  flag internal-downloader
-   description:
-     Compile the internal downloader, which links against OpenSSL. This is disabled on windows.
- 
--  default:     False
-+  default:     True
-   manual:      True
- 
- flag no-exe
