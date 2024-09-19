@@ -22,6 +22,8 @@ Url:            https://hackage.haskell.org/package/ghcup
 # Begin cabal-rpm sources:
 Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
 # End cabal-rpm sources
+# https://github.com/haskell/ghcup-hs/pull/1127/commits/ed0fd9bab79f477256c4cc747ac621c2cfa9f87f
+Patch0:         1127-backport.patch
 
 # Begin cabal-rpm deps:
 BuildRequires:  ghc-rpm-macros
