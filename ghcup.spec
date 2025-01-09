@@ -9,23 +9,20 @@
 %global without_haddock 1
 %global debug_package %{nil}
 
-%global pkg_name ghcup
-%global pkgver %{pkg_name}-%{version}
-
-Name:           %{pkg_name}
-Version:        0.1.30.0
+Name:           ghcup
+Version:        0.1.40.0
 Release:        1%{?dist}
 Summary:        Ghc toolchain installer
 
 License:        LGPL-3.0-only
 Url:            https://hackage.haskell.org/package/ghcup
 # Begin cabal-rpm sources:
-Source0:        https://hackage.haskell.org/package/%{pkgver}/%{pkgver}.tar.gz
+Source0:        https://hackage.haskell.org/package/%{name}-%{version}/%{name}-%{version}.tar.gz
+Source1:        https://hackage.haskell.org/package/%{name}-%{version}/%{name}.cabal#/%{name}-%{version}.cabal
 # End cabal-rpm sources
-# https://github.com/haskell/ghcup-hs/pull/1127/commits/ed0fd9bab79f477256c4cc747ac621c2cfa9f87f
-Patch0:         1127-backport.patch
 
 # Begin cabal-rpm deps:
+BuildRequires:  dos2unix
 BuildRequires:  ghc-rpm-macros
 BuildRequires:  ghc-Cabal-devel
 %if %{defined fedora}
@@ -34,6 +31,7 @@ BuildRequires:  ghc-Cabal-syntax-devel
 BuildRequires:  ghc-aeson-devel
 BuildRequires:  ghc-aeson-pretty-devel
 BuildRequires:  ghc-async-devel
+BuildRequires:  ghc-attoparsec-devel
 BuildRequires:  ghc-base-devel
 BuildRequires:  ghc-base16-bytestring-devel
 BuildRequires:  ghc-binary-devel
@@ -45,6 +43,7 @@ BuildRequires:  ghc-bytestring-devel
 BuildRequires:  ghc-case-insensitive-devel
 #BuildRequires:  ghc-casing-devel
 BuildRequires:  ghc-conduit-devel
+BuildRequires:  ghc-conduit-extra-devel
 BuildRequires:  ghc-containers-devel
 BuildRequires:  ghc-cryptohash-sha256-devel
 BuildRequires:  ghc-deepseq-devel
@@ -55,10 +54,7 @@ BuildRequires:  ghc-disk-free-space-devel
 BuildRequires:  ghc-exceptions-devel
 #BuildRequires:  ghc-file-uri-devel
 BuildRequires:  ghc-filepath-devel
-#BuildRequires:  ghc-haskus-utils-types-devel
-#BuildRequires:  ghc-haskus-utils-variant-devel
 #BuildRequires:  ghc-libarchive-devel
-#BuildRequires:  ghc-lzma-static-devel
 BuildRequires:  ghc-megaparsec-devel
 BuildRequires:  ghc-mtl-devel
 #BuildRequires:  ghc-optics-devel
@@ -94,20 +90,20 @@ BuildRequires:  ghc-unordered-containers-devel
 BuildRequires:  ghc-uri-bytestring-devel
 %endif
 BuildRequires:  ghc-utf8-string-devel
+#BuildRequires:  ghc-variant-devel
 BuildRequires:  ghc-vector-devel
-#BuildRequires:  ghc-versions-devel
+BuildRequires:  ghc-versions-devel
 %if %{defined fedora}
 BuildRequires:  ghc-vty-devel
 BuildRequires:  ghc-word8-devel
 %endif
-#BuildRequires:  ghc-yaml-devel
+#BuildRequires:  ghc-xz-devel
+BuildRequires:  ghc-yaml-devel
 BuildRequires:  ghc-zlib-devel
 BuildRequires:  help2man
 BuildRequires:  cabal-install
 # for missing dep 'chs-deps':
 BuildRequires:  ghc-array-devel
-# for missing dep 'file-uri':
-BuildRequires:  ghc-attoparsec-devel
 # for missing dep 'libarchive':
 BuildRequires:  ghc-dlist-devel
 BuildRequires:  ghc-unix-compat-devel
@@ -115,13 +111,16 @@ BuildRequires:  ghc-unix-compat-devel
 BuildRequires:  ghc-array-devel
 # for missing dep 'optics-core':
 BuildRequires:  ghc-array-devel
-%if 0%{?fedora} >= 43
+%if 0%{?fedora} >= 42
 BuildRequires:  ghc-indexed-profunctors-devel
 %endif
 BuildRequires:  ghc-indexed-traversable-devel
 # for missing dep 'optics-extra':
 BuildRequires:  ghc-array-devel
 BuildRequires:  ghc-hashable-devel
+%if 0%{?fedora} >= 42
+BuildRequires:  ghc-indexed-profunctors-devel
+%endif
 %if %{defined fedora}
 BuildRequires:  ghc-indexed-traversable-instances-devel
 %endif
@@ -150,13 +149,9 @@ experience and exposing an API.
 
 %prep
 # Begin cabal-rpm setup:
-%autosetup -p1
+%setup -q
+dos2unix -k -n %{SOURCE1} %{name}.cabal
 # End cabal-rpm setup
-%if 0%{?fedora} >= 41
-cabal-tweak-dep-ver haskus-utils-variant '^>=3.3' '^>=3.4'
-cabal-tweak-dep-ver mtl '^>=2.2' '>=2.2'
-cabal-tweak-dep-ver transformers '^>=0.5' '>=0.5'
-%endif
 
 
 %build
@@ -175,12 +170,7 @@ cabal-tweak-dep-ver transformers '^>=0.5' '>=0.5'
 mkdir -p %{buildroot}%{_bindir}
 %if %{defined fedora} || 0%{?rhel} >= 9
 %ghc_set_gcc_flags
-%cabal_install install --install-method=copy --enable-executable-stripping --installdir=%{buildroot}%{_bindir} --constraint="libarchive +system-libarchive" \
-%if 0%{?fedora} < 41
- --constraint="haskus-utils-data < 1.5"
-%else
-%{nil}
-%endif
+%cabal_install install --install-method=copy --enable-executable-stripping --installdir=%{buildroot}%{_bindir} --constraint="libarchive +system-libarchive"
 %else
 for i in .cabal-sandbox/bin/*; do
 strip -s -o %{buildroot}%{_bindir}/$(basename $i) $i
@@ -192,7 +182,7 @@ mkdir -p %{buildroot}%{bash_completions_dir}
 %{buildroot}%{_bindir}/%{name} --bash-completion-script %{name} | sed s/filenames/default/ > %{buildroot}%{bash_completions_dir}/%{name}
 
 mkdir -p %{buildroot}%{_mandir}/man1/
-help2man --no-info %{buildroot}%{_bindir}/%{name} > %{buildroot}%{_mandir}/man1/%{name}.1
+PAGER=cat help2man --no-info %{buildroot}%{_bindir}/%{name} > %{buildroot}%{_mandir}/man1/%{name}.1
 # End cabal-rpm install
 
 
@@ -207,6 +197,9 @@ help2man --no-info %{buildroot}%{_bindir}/%{name} > %{buildroot}%{_mandir}/man1/
 
 
 %changelog
+* Thu Jan  9 2025 Jens Petersen <petersen@redhat.com> - 0.1.40.0-1
+- https://hackage.haskell.org/package/ghcup-0.1.40.0/changelog
+
 * Wed Sep 18 2024 Jens Petersen <petersen@redhat.com> - 0.1.30.0-1
 - https://hackage.haskell.org/package/ghcup-0.1.30.0/changelog
 
