@@ -92,8 +92,8 @@ BuildRequires:  ghc-uri-bytestring-devel
 BuildRequires:  ghc-utf8-string-devel
 #BuildRequires:  ghc-variant-devel
 BuildRequires:  ghc-vector-devel
-BuildRequires:  ghc-versions-devel
 %if %{defined fedora}
+BuildRequires:  ghc-versions-devel
 BuildRequires:  ghc-vty-devel
 BuildRequires:  ghc-word8-devel
 %endif
