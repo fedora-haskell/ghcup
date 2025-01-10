@@ -182,6 +182,7 @@ mkdir -p %{buildroot}%{bash_completions_dir}
 %{buildroot}%{_bindir}/%{name} --bash-completion-script %{name} | sed s/filenames/default/ > %{buildroot}%{bash_completions_dir}/%{name}
 
 mkdir -p %{buildroot}%{_mandir}/man1/
+# somehow pages in Emacs compilation mode
 PAGER=cat help2man --no-info %{buildroot}%{_bindir}/%{name} > %{buildroot}%{_mandir}/man1/%{name}.1
 # End cabal-rpm install
 
