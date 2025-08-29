@@ -10,7 +10,7 @@
 %global debug_package %{nil}
 
 Name:           ghcup
-Version:        0.1.50.1
+Version:        0.1.50.2
 Release:        1%{?dist}
 Summary:        Ghc toolchain installer
 
@@ -195,6 +195,9 @@ PAGER=cat help2man --no-info %{buildroot}%{_bindir}/%{name} > %{buildroot}%{_man
 
 
 %changelog
+* Thu Aug 28 2025 Jens Petersen <petersen@redhat.com> - 0.1.50.2-1
+- https://hackage.haskell.org/package/ghcup-0.1.50.2/changelog
+
 * Wed Mar 26 2025 Jens Petersen  <petersen@redhat.com> - 0.1.50.1-1
 - https://hackage.haskell.org/package/ghcup-0.1.50.1/changelog
 
